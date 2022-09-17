@@ -1,0 +1,28 @@
+{% extends "home/basic.html" %}
+{% block contactactive %}active{% endblock contactactive %}
+{% block body %}
+
+<div class="container my-4">
+  <h3>Contact us</h3>
+  <form action="http://127.0.0.1:8000/contact/" method='post'>
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Name</label>
+      <input type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Ashish Kumar"
+        required>
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Email address</label>
+      <input type="email" class="form-control" name="email" id="exampleFormControlInput1" placeholder="name@example.com"
+        required>
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">How we help you</label>
+      <textarea class="form-control" name="message" required id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <input type="submit" class='btn btn-primary'></input>
+    </div>
+  </form>
+</div>
+{% endblock body %}

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap CSS -->
+        
+  <link rel="icon" type="image/x-icon" href="{% static 'photo/ceclogo.png' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-avatar@latest/dist/avatar.min.css" rel="stylesheet">
+ 
+
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+<!-- Template Main CSS Files -->
+<link href="assets/css/variables.css" rel="stylesheet">
+<link href="assets/css/main.css" rel="stylesheet">
+        <title>{% block title %}{% endblock title %}</title>
+        {%block css%} {%endblock css%}
+    </head>
+    
+
+    <body>
+        <header class="p-3 bg-light" style="color: grey">
+            <div class="container">
+              <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                  <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+                </a>
+        
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                  <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+        
+                </ul>
+        
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="{% url 'search' %}" method="GET">
+                    {% csrf_token %}
+                    <input type="search" name="query" class="form-control" placeholder="Search..." aria-label="Search">
+                  </form>
+
+                {% if user.is_authenticated %}
+                
+                <div class="btn-group">
+                    <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Welcome {{request.user.first_name}}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/logout/">Logout</a></li>    
+                    </ul>
+                </div>
+
+                {% else %}
+                <!-- else show the login and signup buttons -->
+
+                <!-- Button trigger Signup modal -->
+                <div class="text-end">
+                    <a href="{% url 'login' %}" type="button" class="btn">Login</a>
+                    <a href="{% url 'signup' %}"  type="button" class="btn">Sign-up</a>
+                  </div>
+                {% endif %}
+
+                
+        
+             
+              </div>
+            </div>
+          </header>
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>Message: </strong> {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+
+
+        <!-- Signup Modal -->
+        <div class="modal fade" id="SignupModal" tabindex="-1" aria-labelledby="1SignupModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="1SignupModal">SignUp Here</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Creating the body of the signup form -->
+                        <form action="http://127.0.0.1:8000/signup/" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group container">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" aria-describedby="emailHelp"
+                                    name="name" required>
+                            </div>
+
+                            <div class="form-group container">
+                                <label for="username" class="form-label">User Name</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    aria-describedby="emailHelp" required>
+                            </div>
+
+                            <div class="form-group container">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                                    name="email" required>
+                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                                </div>
+                            </div>
+
+                            <div class="form-group container">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+
+                            <div class="form-group container">
+                                <label for="conpassword" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="conpassword" name="conpassword"
+                                    required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mx-2 my-3">SignUp</button>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Login in Modal -->
+        <div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="1LoginModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="1LoginModal">Login Here</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Creating the body of the Login form -->
+                        <form action="http://127.0.0.1:8000/login/" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group container">
+                                <label for="loginusername" class="form-label">User Name </label>
+                                <input type="text" class="form-control" id="loginusername" aria-describedby="emailHelp"
+                                    name="loginusername" required>
+                            </div>
+                            <div class="form-group container">
+                                <label for="loginpassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="loginconpassword" name="loginpassword"
+                                    required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mx-2 my-3">Login</button>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        {% block body %}{% endblock body %}
+        <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static ' assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+    </body>
+        {% block js %} {% endblock js %}
+    
+
+</html>
