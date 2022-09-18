@@ -40,19 +40,23 @@ def populars(request):
 
 # Home page for the Blog (Home Link on the website)
 def bloghome(request):
-    a = Post.objects.all()
+    a = Post.objects.all().order_by('-likes')
     p = Paginator(a,6)
     page_number = request.GET.get('page')
     pgs_page = p.get_page(page_number)
     likes_list = []
+    carouselPages = Post.objects.all()[0:3]
+
     for i in pgs_page:
         try:
             Likes.objects.get(user=request.user.username,post_sno = i.sno)
             likes_list.append(True)
         except Exception as e:
             likes_list.append(False)
+    
+    
 
-    return render(request,'blog/bloghome.html',{'posts':zip(likes_list,pgs_page),'page_range':p.page_range,'lklist':likes_list})
+    return render(request,'blog/bloghome.html',{'posts':zip(likes_list,pgs_page),'page_range':p.page_range,'lklist':likes_list,'carousal':carouselPages})
 
 
 
@@ -90,19 +94,51 @@ def search_result(request):
             a1 = Post.objects.filter(title__icontains=query) # If query in title
             a2 = Post.objects.filter(content__icontains = query) # if query in content
             a = a1.union(a2) # Taking union of above two query sets
-            p = Paginator(a,1)
+            p = Paginator(a,6)
+            likes_list = []
             page_number = request.GET.get('page')
             pgs_page = p.get_page(page_number)
-            data['posts'] = pgs_page
-            data['number'] = len(a) # No of results
+            for i in pgs_page:
+                try:
+                    Likes.objects.get(user=request.user.username,post_sno = i.sno)
+                    likes_list.append(True)
+                except Exception as e:
+                    likes_list.append(False)
+                
             
             
 
-        return render(request,'home/search.html',{'posts':pgs_page,'page_range':p.page_range, 'number':len(a)})
+        return render(request,'home/search.html',{'posts':zip(likes_list,pgs_page),'page_range':p.page_range, 'number':len(pgs_page)})
 
        
     return redirect("home")
 
+# Search button functionality and Handling Search Queries
+def category(request,slug):
+
+    if(request.method=='GET'):
+        
+        # Limitng the Characters in the Search
+    
+        a1 = Post.objects.filter(category=slug) 
+        p = Paginator(a1,6)
+        likes_list = []
+        page_number = request.GET.get('page')
+        pgs_page = p.get_page(page_number)
+        for i in pgs_page:
+            try:
+                Likes.objects.get(user=request.user.username,post_sno = i.sno)
+                likes_list.append(True)
+            except Exception as e:
+                likes_list.append(False)
+                
+            
+
+
+        return render(request,'home/search.html',{'posts':zip(likes_list,pgs_page),'page_range':p.page_range, 'number':len(pgs_page)})
+
+       
+    return redirect("home")
 
 
 # Function for Handle all the working related with signup

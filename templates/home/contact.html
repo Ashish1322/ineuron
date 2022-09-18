@@ -1,28 +1,68 @@
 {% extends "home/basic.html" %}
 {% block contactactive %}active{% endblock contactactive %}
 {% block body %}
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
 <div class="container my-4">
-  <h3>Contact us</h3>
-  <form action="http://127.0.0.1:8000/contact/" method='post'>
-    {% csrf_token %}
-    <div class="mb-3">
-      <label for="exampleFormControlInput1" class="form-label">Name</label>
-      <input type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Ashish Kumar"
-        required>
+ 
+  
+  <section class="vh-100">
+    <div class="container-fluid h-custom">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+       
+        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1 order-sm-last  order-md-first order-last">
+          <form target="{% url 'contact' %}" method="POST">
+            {% csrf_token %}
+           
+            <div class="divider d-flex align-items-center my-4">
+              <h3 class="text-center fw-bold mx-3 mb-0" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Feel free to write us</h3>
+            </div>
+  
+            <div class="row">
+                <div class="col-md-6 col-6 order-md-1 ">
+
+                    <div class="form-outline mb-4">
+                        <input required type="text" name="name" id="name" class="form-control form-control-lg"
+                        placeholder="Full Name" />
+                    
+                    </div>
+
+                </div>
+                <div class="col-md-6 col-6">
+                  <div class="form-outline mb-4">
+                    <input required type="email" id="email" name="email" class="form-control form-control-lg"
+                    placeholder="Enter Email Address" />
+                
+                </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="form-outline mb-4">
+                <textarea required  id="email" name="message" class="form-control form-control-lg"
+                placeholder="Write your message..." ></textarea>
+            
+            </div>
+            </div>
+           
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <input type="submit" class="btn  btn-lg"
+                style="padding-left: 2.5rem; padding-right: 2.5rem;background-color: black; color: white;" value="Send Message"/>
+                  
+            </div>
+  
+          </form>
+        </div>
+        <div class="col-md-9 col-lg-6 col-xl-5 " data-aos="zoom-in-down" >
+          <img src="http://unblast.com/wp-content/uploads/2020/09/Contact-Us-Vector-Illustration-Part-02-1.jpg"
+            class="img-fluid" alt="Sample image">
+        </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="exampleFormControlInput1" class="form-label">Email address</label>
-      <input type="email" class="form-control" name="email" id="exampleFormControlInput1" placeholder="name@example.com"
-        required>
+   
+      </div>
+      <!-- Right -->
     </div>
-    <div class="mb-3">
-      <label for="exampleFormControlTextarea1" class="form-label">How we help you</label>
-      <textarea class="form-control" name="message" required id="exampleFormControlTextarea1" rows="3"></textarea>
-    </div>
-    <div class="mb-3">
-      <input type="submit" class='btn btn-primary'></input>
-    </div>
-  </form>
+  </section>
 </div>
 {% endblock body %}

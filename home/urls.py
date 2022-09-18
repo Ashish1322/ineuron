@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout/', views.handleLogout, name='logout'),
     path('populars/', views.populars, name='populars'),
     path("activate/<uidb64>/<token>",views.get, name="activate"),
+    path("category/<str:slug>",views.category, name="category"),
 ]

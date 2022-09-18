@@ -8,5 +8,6 @@ urlpatterns = [
     
     path('<str:slug>', views.blogpost, name='slug'),
     path('like/<str:slug>', views.like, name='like'),
+    
 
 ]

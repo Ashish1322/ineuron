@@ -1,39 +1,17 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SignUp</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <style>
-       .divider:after,
-.divider:before {
-content: "";
-flex: 1;
-height: 1px;
-background: #eee;
-}
-.h-custom {
-height: calc(100% - 73px);
-}
-@media (max-width: 450px) {
-.h-custom {
-height: 100%;
-}
-}
-    </style>
-  </head>
-  <body>
+{% extends "home/basic.html" %}
+{% block contactactive %}active{% endblock contactactive %}
+{% block body %}
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     <section class="vh-100">
         <div class="container-fluid h-custom">
           <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-md-9 col-lg-6 col-xl-5">
+            <div class="col-md-9 col-lg-6 col-xl-5" data-aos="zoom-in-left">
               <img src="https://img.freepik.com/premium-vector/programmer-semi-flat-color-vector-character-student-figure-sitting-person-white-man-computer-desk-coding-isolated-modern-cartoon-style-illustration-graphic-design-animation_151150-5964.jpg?w=2000"
                 class="img-fluid" alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-              <form target="{% url 'signup' %}" method="POST">
+              <form action="{% url 'signup' %}" method="POST"  onsubmit="activate_spinner()">
                 {% csrf_token %}
                
                 <div class="divider d-flex align-items-center my-4">
@@ -69,10 +47,11 @@ height: 100%;
                     <div class="col-md-6 col-6">
 
                         <div class="form-outline mb-4">
-                            <input required type="password" name="password" id="pass" class="form-control form-control-lg"
+                            <input  onkeyup="validatePassword(this.value);" required type="password" name="password" id="pass" class="form-control form-control-lg"
                             placeholder="Password" />
                         
                         </div>
+                        <p class="small fw-bold mt-2 pt-1 mb-0" >Password Strength: <span id="msg">NIL</span></p>
 
                     </div>
                     <div class="col-md-6 col-6">
@@ -88,42 +67,75 @@ height: 100%;
                
       
                 <div class="text-center text-lg-start mt-4 pt-2">
+                    <div id="sign_up_but" >
+
+                    
                   <input type="submit" class="btn  btn-lg"
-                    style="padding-left: 2.5rem; padding-right: 2.5rem;background-color: #C4D7E0; color: black;" value="Create Account"/>
+                    style="padding-left: 2.5rem; padding-right: 2.5rem;background-color: black; color:white;" value="Create Account"/>
+                </div>
                       <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="{% url 'login' %}"
                       class="link-danger">Login</a></p>
-                      <p class="small fw-bold mt-2 pt-1 mb-0">Go Back to <a href="{% url 'home' %}"
-                        class="link-danger">Home</a></p>
+                     
                 </div>
       
               </form>
             </div>
+            
           </div>
         </div>
-        <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 link-danger"  style="background-color: lightblue">
-          <!-- Copyright -->
-          
-          <!-- Copyright -->
-      
-          <!-- Right -->
-          <div>
-            <a href="#!" class="text-white me-4">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="#!" class="text-white me-4">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#!" class="text-white me-4">
-              <i class="fab fa-google"></i>
-            </a>
-            <a href="#!" class="text-white">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
-          </div>
-          <!-- Right -->
-        </div>
+        
       </section>
+        
+      <script>
+        function activate_spinner()
+{
+  document.getElementById("sign_up_but").innerHTML = "<button  class='btn btn-primary'><span class='spinner-border spinner-border-sm'></span> Please Wait...</button>";
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-  </body>
-</html>
+}
+
+function validatePassword(password) {
+                
+                // Do not show anything when the length of password is zero.
+                if (password.length === 0) {
+                    document.getElementById("msg").innerHTML = "";
+                    return;
+                }
+                // Create an array and push all possible values that you want in password
+                var matchedCase = new Array();
+                matchedCase.push("[$@$!%*#?&]"); // Special Charector
+                matchedCase.push("[A-Z]");      // Uppercase Alpabates
+                matchedCase.push("[0-9]");      // Numbers
+                matchedCase.push("[a-z]");     // Lowercase Alphabates
+
+                // Check the conditions
+                var ctr = 0;
+                for (var i = 0; i < matchedCase.length; i++) {
+                    if (new RegExp(matchedCase[i]).test(password)) {
+                        ctr++;
+                    }
+                }
+                // Display it
+                var color = "";
+                var strength = "";
+                switch (ctr) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        strength = "Very Weak";
+                        color = "red";
+                        break;
+                    case 3:
+                        strength = "Medium";
+                        color = "orange";
+                        break;
+                    case 4:
+                        strength = "Strong";
+                        color = "green";
+                        break;
+                }
+                document.getElementById("msg").innerHTML = strength;
+                document.getElementById("msg").style.color = color;
+            }
+
+      </script>
+      {% endblock body %}

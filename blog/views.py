@@ -28,9 +28,9 @@ def blogpost(request,slug):
     a = Post.objects.filter(sno = slug) # Fetching the required Post
     # Handling the number of view (Please suggest Improvements)
     b = Post.objects.filter(sno = slug).first()
-
-    latest = Post.objects.all()
+    # Give 5 trending posts by their likes
+    trending =  Post.objects.all().order_by('-likes')
 
     # Sending all the variables to the blogpost.html file 
-    return render(request,'blog/blogpost.html',{'post':a[0],'latest':latest[0:4],})
+    return render(request,'blog/blogpost.html',{'post':a[0],'trending':trending[0:5],})
 

@@ -4,19 +4,123 @@
 
 <!-- Title and Active Block -->
 {% block title %} BlogHome {% endblock title %}
-{% block blogacitve %} active {% endblock blogacitve %}
 <!--For the higlighting on the navigation bar (Activating link on basic html file-->
-
+{% load static %}
 <!-- Body Block -->
 {% block body %}
+
+<main >
+
+    <!-- ======= Hero Slider Section ======= -->
+    <section id="hero-slider" class="hero-slider" style="margin-top:0px">
+      <div class="container-md" >
+        <div class="row">
+          <div class="col-12">
+            <div class="swiper sliderFeaturedPosts">
+              <div class="swiper-wrapper">
+                {% for post in carousal  %}
+                <div class="swiper-slide">
+                    <a href="{% url 'slug' post.sno %}" class="img-bg d-flex align-items-end" style="background-image: url('http://127.0.0.1:8000/media/{{post.image}}');">
+                      <div class="img-bg-inner">
+                        <h2>{{post.title}}</h2>
+                        <p>{{post.content|slice:290|safe}}..</p>
+                      </div>
+                    </a>
+                  </div>
+                {% endfor %}
+               
+
+                
+              </div>
+              <div class="custom-swiper-button-next">
+                <span class="bi-chevron-right"></span>
+              </div>
+              <div class="custom-swiper-button-prev">
+                <span class="bi-chevron-left"></span>
+              </div>
+
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Hero Slider Section -->
+
+    <!-- ======= Post Grid Section ======= -->
+    <section id="posts" class="posts">
+      <div class="container" data-aos="fade-up">
+        <div class="row ">
+          <div class="col-lg-4" style="padding-right: 40px">
+            <div class="post-entry-1 lg">
+              <a href="single-post.html"><img src="{% static 'nuron.png' %}" alt="" class="img-fluid"></a>
+              <div class="post-meta"><span class="date">Education</span> <span class="mx-1">&bullet;</span> <span>Sep 18th '22</span></div>
+              <h2><a href="single-post.html">What is One Neuron ?</a></h2>
+              <p class="mb-4  d-block" style="text-align: justify">This is a new OTT platform for education, where you can get all of your educational needs met at the touch of a button. Furthermore, you will have the ability to raise your demand for any new course, and it will be delivered, with many integrated out-of-the-box services and much-needed hand-holding till you achieve success in your career.</p>
+
+             
+            </div>
+
+          </div>
+
+          <div class="col-lg-8">
+            <div class="row g-5">
+              
+                <div class="row">
+                {% for like,post in posts %}
+               
+                    <div class="post-entry-1 col-md-4">
+                        <a href="{% url 'slug' post.sno %}"><img src="http://127.0.0.1:8000/media/{{post.image}}" alt="" class="img-fluid"></a>
+                        <div class="post-meta"><span class="date"> {{post.category}}</span> <span class="mx-1">&bullet;</span> <span>{{post.timestamp}}</span>
+                            <span style="float: right"> {{post.likes}} 
+                                {% if user.is_authenticated %}
+                         {% comment %} if user i logged in then check if he has already liked the post or not {% endcomment %}
+                         
+                            {% if like %}
+                          
+                            <a  style="text-align: left"  > <i class="fa fa-2x fa-thumbs-up"></i>  </a>
+                            {% else %}
+                            <a  style="text-align: left"  href="{% url 'like' post.sno %}"> <i class="fa-regular fa-2x fa-thumbs-up"></i>  </a>
+                            {% endif %}
+                    
+                       {% else %}
+                      
+                            
+                      
+                       <a style="text-align: left" href="{% url 'login' %}" > <i class="fa-regular fa-2x fa-thumbs-up"></i>  </a>
+                        {% endif %}
+                            </span></div>
+                        <h2><a href="{% url 'slug' post.sno %}">{{post.title}}
+              
+                 During Video Calls?</a></h2>
+                </div>
+                {% endfor %}
+            
+               
+              </div>
+              
+
+            
+            </div>
+          </div>
+
+        </div> <!-- End .row -->
+      </div>
+    </section> <!-- End Post Grid Section -->
+
+   
+  </main>
+
+
+
 <div class="container my-3">
-    <h2>Coding Articles by iCoder</h2>
+    
+    
     <!-- Showing all the posts which are given by bloghome function of views.py in blog app  -->
         <div class="row">
     {% for like,post in posts %}
 
    
-        <div class="col-md-4 col-12 col">
+        <div class="col-md-4 col-12 col" data-aos="flip-up">
             
             <div class="card shadow-sm">
                 <span class="position-absolute top-0 right-0 badge bg-warning">
@@ -69,7 +173,7 @@
   
     {% endfor %}
 </div>
-<div class="container mt-5">
+<div class="container mb-5">
   
 <nav aria-label="Page navigation example">
     <!-- pgs is the page object of paginator -->
@@ -116,11 +220,16 @@
     </ul>
   </nav>
 </div>
+</div>
+
+<div style="height: 50px">
+</div>
     {% endblock %}
 
     <!-- Javascript Block -->
     {% block js %}
     <!-- Script for the showing the description as render html but in a simple paragraph if this is not used then the description will show as an html style with heading and all other but if this is used then it will convert the innerhtml to the its simple text -->
+    
     <script>
         let previews = document.getElementsByClassName('preview');
         Array.from(previews).forEach((element) => {
